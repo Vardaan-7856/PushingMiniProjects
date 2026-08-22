@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Changer</title>
+</head>
+<body>
+    <p>Change the color of the background randomly. </p>
+    <p>Current Color is: <span id="hex-text"></span></p>
+    <button onclick="changeColor()">Generate Hex</button>
+    <script>
+        const body = document.body.style;
+        const text = document.getElementById("hex-text");
+
+        const createHex = () => {
+            let result = "#";
+            const hexData = "0123456789ABCDEF";
+            const hexDataLength = hexData.length;
+
+            for(let i=0; i < 6; i++)
+            {
+                result += hexData.charAt(Math.floor(Math.random() * hexDataLength));
+            }
+            return result;
+        }
+
+        const changeColor = () => {
+            let hex = createHex();
+            console.log(hex);
+            body.backgroundColor = hex;
+            text.innerText = hex;
+        }
+    </script>
+</body>
+</html>
