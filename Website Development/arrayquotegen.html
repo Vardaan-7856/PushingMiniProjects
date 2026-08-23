@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Generator</title>
+</head>
+<body>
+    <p id="quote"></p>
+    <p id="author"></p>
+    <button onclick="updateUI()">Generate</button>
+
+    <script>
+        let quote = document.getElementById('quote');
+        let author = document.getElementById('author');
+
+        let quotes = [];
+
+        const quote1 = {
+            saying: "Every man for himself, every woman for herself.",
+            sayer: "Anon"
+        }
+        const quote2 = {
+            saying: "Eat food, and dont try to not lose it.",
+            sayer: "Anon"
+        }        
+        const quote3 = {
+            saying: "Black is the new white, white is the new blue.",
+            sayer: "Anon"
+        }
+        const quote4 = {
+            saying: "I cannot see, therefore i am unseen.",
+            sayer: "Anon"
+        }
+        const quote5 = {
+            saying: "Period is the end of the sentence. Period.",
+            sayer: "Anon"
+        }
+
+        quotes.push(quote1, quote2, quote3, quote4, quote5);
+
+        function updateUI() {
+            let randPosition = Math.floor(Math.random() * quotes.length);
+            let selectedQuote = quotes[randPosition];
+            
+            quote.textContent = selectedQuote.saying;
+            author.textContent = selectedQuote.sayer;
+        }
+        
+
+        updateUI();
+    </script>
+</body>
+</html>
