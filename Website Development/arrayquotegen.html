@@ -42,7 +42,9 @@
         function updateUI() {
             let randPosition = Math.floor(Math.random() * quotes.length);
             let selectedQuote = quotes[randPosition];
-            
+
+            console.log(randPosition);
+
             quote.textContent = selectedQuote.saying;
             author.textContent = selectedQuote.sayer;
         }

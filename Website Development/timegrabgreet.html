@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greetings</title>
+</head>
+<body>
+    <p id="time"></p>
+    <p><span id="greetingMsg"></span>! Vardaan</p>
+    <button onclick="greetUser()">Greet me!</button>
+
+    <script>
+
+        function greetUser() {
+            
+            let now = new Date();
+            let hour = now.getHours();
+            
+            console.log(hour);
+    
+            // Good morning - 0 to 12
+            // Good Afternoon - 12.01 to 17
+            // Good Eveningg - 17.01 to 24
+    
+            if(hour >= 0 && hour <= 12)
+                // console.log("Good Morning.");
+                document.getElementById("greetingMsg").textContent = "Good Morning"
+            else if(hour < 17)
+                // console.log("Good Afternoon.");
+                document.getElementById("greetingMsg").textContent = "Good Afternoon"
+            else        
+                document.getElementById("greetingMsg").textContent = "Good Evening"
+            // console.log("Good Evening.");
+        }
+    </script>
+</body>
+</html>

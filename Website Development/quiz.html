@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color: beige;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding:1rem;
+            font-family: sans-serif;
+        }
+        .container{
+            background-color:darkcyan;
+            width:40vw;
+            overflow: hidden;
+            box-shadow: 5px 5px grey;
+        }
+        .screen{
+            display: none;
+            padding: 2rem;
+            text-align: center;
+            line-height: 2rem;
+            color: white;
+
+        }
+        .screen.active{
+            display: block;
+        }
+        .quiz--choices{
+            display: flex;
+            flex-direction: column;
+            gap:0.5rem;
+            margin: 2rem;
+        }
+        .quiz--stats{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .progress-bar{
+            color: orange;
+            overflow: hidden;
+            height: 100%;
+            width: 0%;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="screen active" id="quiz-welcome">
+            <p>Quiz Time</p>
+            <p>Test your knowledge with these fun questions.</p>
+            <button id="start-quiz-btn">Start Quiz</button>
+        </div>
+        
+        <!-- Quiz Starts here -->
+        
+        <div class="screen " id="quiz">
+            <p id="quiz-question-placeholder"></p>
+            <div class="quiz--stats">
+                <p>Question <span id="current-question-placeholder"></span> of <span>5</span></p>
+                <p>Score: <span id="score">2</span></p>
+            </div>
+            <div class="quiz--choices" id="answer-container">
+
+            </div>
+        </div>
+        
+        <!-- Quiz summary here -->
+        
+        <div class="screen " id="quiz-summary">
+            <p>You scored <span id="quiz-summary-total">2</span> out of <span>5</span></p>
+            <p>Good Effort! Keep learning!</p>
+            <button onclick="restartQuiz()">Restart Quiz</button>
+        </div>
+
+        <div class="progress-bar">
+
+        </div>
+    </div>
+        
+    <script>    
+        const startQuizBtn = document.getElementById("start-quiz-btn");
+        const quizWelcomeScreen = document.getElementById("quiz-welcome");
+        const quizScreen = document.getElementById("quiz");
+        const quizQuestionPlaceholder = document.getElementById("quiz-question-placeholder");
+        const answerContainer = document.getElementById("answer-container");
+        const scoreSpan = document.getElementById("score");
+        const currentQuestionPlaceholder = document.getElementById("current-question-placeholder");
+        const quizSummary = document.getElementById("quiz-summary");
+        const quizSummaryTotal = document.getElementById("quiz-summary-total");
+        const progressBar = document.getElementById("progress-bar");
+        // Questions
+        const questionsArray = [
+            {
+                question: "What is capital of France?",
+                answers: [
+                    {text: "London", correct: false},
+                    {text: "Berlin", correct: false},
+                    {text: "Paris", correct: true},
+                    {text: "Madrid", correct: false}
+                ],
+            },
+            {
+                question: "What planet is called the Red Planet?",
+                answers: [
+                    {text: "Venus", correct: false},
+                    {text: "Mars", correct: true},
+                    {text: "Jupiter", correct: false},
+                    {text: "Saturn", correct: false}
+                ],
+            },
+            {
+                question: "What is the largest ocean on Earth?",
+                answers: [
+                    {text: "Atlantic Ocean", correct: false},
+                    {text: "Indian Ocean", correct: false},
+                    {text: "Artic Ocean", correct: false},
+                    {text: "Pacific Ocean", correct: true}
+                ],
+            },
+            {
+                question: "What here is not a programming lang?",
+                answers: [
+                    {text: "Java", correct: false},
+                    {text: "JavaScript", correct: false},
+                    {text: "Python", correct: false},
+                    {text: "Banana", correct: true}
+                ],
+            },
+            {
+                question: "What is the symbol of gold?",
+                answers: [
+                    {text: "Hg", correct: false},
+                    {text: "Ag", correct: false},
+                    {text: "Au", correct: true},
+                    {text: "Gd", correct: false}
+                ],
+            }
+        ];
+
+
+        // Event Listeners
+        startQuizBtn.addEventListener("click",startQuiz);
+
+        
+        // Vars
+        let currentQuestion;
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // Functions
+        function startQuiz(){
+            quizWelcomeScreen.classList.remove("active");
+            quizScreen.classList.add("active");
+
+            scoreSpan.textContent = 0;
+
+            showQuestions();
+        }
+
+        function showQuestions(){
+            currentQuestion = questionsArray[currentQuestionIndex];
+            
+            quizQuestionPlaceholder.textContent = currentQuestion.question;
+            
+            // Print buttons for all answer
+            answerContainer.innerHTML = "";
+            
+            currentQuestionPlaceholder.textContent = currentQuestionIndex+1;
+            
+            currentQuestion.answers.forEach((answer) => {
+                const button = document.createElement("button");
+                button.textContent = answer.text;
+                button.classList.add("answer-btn");    
+
+                button.dataset.correct = answer.correct;
+                button.addEventListener("click", selectAnswer);
+
+                answerContainer.appendChild(button);
+            });
+            
+        }
+        //button was clicked
+
+        function selectAnswer(Event){
+            console.log("button clicked");
+
+            const selectedButton = event.target;
+            const isCorrect = selectedButton.dataset.correct === "true";
+            
+
+        //isthe clicked button the correct one?
+        if(currentQuestionIndex < questionsArray.length-1)
+        {
+
+            if(isCorrect)
+            {
+                console.log("Answer is correct");
+                score++;
+                scoreSpan.textContent = score;
+                currentQuestionIndex++;
+                currentQuestionPlaceholder.textContent = currentQuestionIndex+1;
+                showQuestions();
+                
+
+            }
+            else
+            {
+                console.log("Answer is wrong.");
+                scoreSpan.textContent = score;
+                currentQuestionIndex++;
+                currentQuestionPlaceholder.textContent = currentQuestionIndex+1;
+                showQuestions();
+            }
+        }
+        else
+        {
+            console.log(currentQuestionIndex);
+            console.log(questionsArray.length);
+            quiz.classList.remove("active");
+            quizSummary.classList.add("active");    
+            quizSummaryTotal.textContent = score;
+        }
+        }
+        function restartQuiz(){
+            currentQuestionIndex = 0;
+            score = 0;
+            startQuiz();
+            
+            quizSummary.classList.remove("active");
+        }
+
+
+    </script>
+</body>
+</html>
