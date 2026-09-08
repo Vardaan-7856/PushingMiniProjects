@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            margin: 2rem auto 2rem;
+        }
+        .container{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            margin:2rem;
+            min-height: 200px;
+            
+            width: 60vw;
+            margin: 1rem auto 1rem;
+
+            .title{
+                font-size: 1.25rem;
+                margin: 0.5rem auto;
+                font-weight: bold;
+            }
+            
+            .list{
+                border-style: solid;
+                margin:0.2rem;
+                border-width: 1.5px;
+
+                div{
+                    margin: 0.5rem 0.3rem;
+                    cursor:grab;
+                    border-style: solid;
+                    border-width: 0.5px;
+                    padding: 0.2rem;
+                }
+
+                div:active{
+                    cursor:grabbing;
+                }
+
+                .card:active{
+                    background-color: grey;
+                }
+            }
+        .over{
+            border-style: dotted;
+            border-width: 2px;
+        }
+            
+        }
+
+    </style>
+</head>
+<body>
+    <h2>Simple Kanban Board</h2>
+    <div class="container">
+
+        <div class="do list">
+            <p class="title">To Do</p>
+            <div class="card" draggable="true" id="1" >Cook paneer</div>
+        </div>
+
+        <div class="process list">
+            <p class="title">In Process</p>
+            <div class="card" draggable="true" id="2">Walk the dog</div>
+            <div class="card" draggable="true" id="3">Clean the dishes</div>
+            <div class="card" draggable="true" id="4">Biryani with Malasian</div>
+        </div>
+
+        <div class="done list">
+            <p class="title">Done</p>
+            <div class="card" draggable="true" id="5">Biryani with Punjabi</div>
+        </div>
+
+    </div>
+    <script>
+
+        const cards = document.querySelectorAll(".card");
+        const lists = document.querySelectorAll(".list");
+
+        //Add event listener for the card items
+        //Cards can only have two states, dragging and dropping
+        for (const card of cards){
+            card.addEventListener("dragstart", dragStart);
+            card.addEventListener("dragend", dragEnd);
+        }
+
+        //Add event listener for the list items
+        //Lists can have the following states
+        //Item is brought over the drop area == dragover
+        //Item is brought into the boundary of the drop area == dragenter
+        //Item is moved out of the boundary of the current block's boundary == dragleave
+        //Release the mouse button to drop item in the drop area == drop
+        for (const list of lists){
+            list.addEventListener("dragover", dragOver);
+            list.addEventListener("dragenter", dragEnter);
+            list.addEventListener("dragleave", dragLeave);
+            list.addEventListener("drop", dragDrop);
+        }
+
+        console.log(lists);
+
+        function dragStart(e) {
+            e.dataTransfer.setData("text/plain",this.id);
+            console.log("Drag has began!");
+        }
+
+        function dragEnd() {
+            console.log("Drag has ended!");
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function dragEnter(e) {
+            //inside the boundary wall of the drop area
+            e.preventDefault();
+            this.classList.add("over");
+        }
+
+        function dragLeave() {
+            this.classList.remove("over");
+        }
+
+        function dragDrop(e) {
+            const id = e.dataTransfer.getData("text/plain");
+            const card = document.getElementById(id);
+
+            this.appendChild(card);
+            this.classList.remove("over");
+        }
+
+    </script>
+</body>
+</html>
