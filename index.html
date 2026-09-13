@@ -4,8 +4,43 @@
     <meta charset="utf-8">
     <title>Mini Projects</title>
   </head>
+  <style>
+    body{
+      min-height: 100vh;
+      margin: 2rem;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      background-color: rgba(255, 228, 196, 0.53);
+    }
+    .message{
+      width:80%;
+      text-align: left;
+      margin:2rem auto;
+    }
+    ul{
+      display: flex;
+      flex-direction: column;
+      gap:0.4rem;
+      width:fit-content;
+      margin:0px auto;
+    }
+    li{
+      list-style-type:decimal;
+      display: inline-block;
+    }
+    li:hover{
+      transform: scale(120%);
+    }
+  </style>
   <body>
     <h1>My Projects and my journey to learn JS.</h1>
+    <div class="message">
+      <p>Hey, folks!</p>
+      <p>I am learning HTML, CSS and JS. These projects are mostly an attempt to further my understanding about JS so that I can move on to JS Frameworks like React, Angular, so on. I am very excited to share my work.</p>
+      <p>My focus is mostly on the stuff under the hood aka the JS, excuse me if the visual elements are to your liking. This is a learning project or a rough notebook.</p>
+      <p id="updateTime">Last Updated: 14th Sept, 2026</p>
+    </div>
 <ul>
     <li><a href="./Website Development/arrayquotegen.html">Array Quote Generator</a></li>
     <li><a href="./Website Development/background_changer.html">Background Changer</a></li>
@@ -18,4 +53,6 @@
     <li><a href="./Website Development/timegrabgreet.html">Time Grab Greet</a></li>
   </ul>
   </body>
+  <script>
+  </script>
 </html>
