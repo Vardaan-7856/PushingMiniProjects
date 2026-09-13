@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracking</title>
     <style>
+        :root{
+            --border-radius: 1rem;
+            --container_padding: 2rem;
+        }
         *{
             padding: 0;
             margin: 0;
@@ -14,30 +18,41 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin:0;
             font-family: Arial, Helvetica, sans-serif;
+            background-color: black;
+            background:linear-gradient(135deg, #2e8b57, #a8d5ba);
+            min-height: 100vh;
         }
         .main-container{
-            background-color: green;
-            width: clamp(500px, 50vw, 800px);
-            height: 80vh;
-            margin:auto;
-            padding: 2rem;
+            width: 90%;
+            margin: 2rem auto;
+            background-color: rgba(255, 255, 255, 0.459);
+            padding: var(--container_padding);
+            border-radius: var(--border-radius);
+
+            .bigTitle{
+                font-size: 1.5rem;
+                text-align: center;
+                font-weight: bold;
+                margin: 1.2rem auto;
+            }
 
             .view-container{
-                background: linear-gradient(90deg, rgba(81, 255, 1, 0.405), rgba(0, 128, 0, 0.407), rgba(0, 100, 0, 0.291));
                 text-align: center;
-                padding: 2rem;
-                border-radius: 0.5rem;
-                color: white;
+                padding: var(--container_padding);
+                border-radius: var(--border-radius);
                 font-weight: bolder;
+                background: linear-gradient(90deg, rgba(81, 255, 1, 0.405), rgba(0, 128, 0, 0.407), rgba(0, 100, 0, 0.291));
+                
+                .total{
+                    font-size: 2rem;
+                }
                 
                 .summary{
                     display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    border-radius: 0.5rem;
-                    margin-top: 2rem;
+                    grid-template-columns: repeat(auto-fit,minmax(150px, 1fr));
+                    border-radius: var(--border-radius);
+                    margin:2rem auto;
                     gap:1rem;
                     
                     .income-summary{
@@ -45,47 +60,125 @@
                         padding:2rem;
                         color: green;
                         font-weight: bolder;
-                        border-radius: 0.5rem;
+                        border-radius: var(--border-radius);
                     }
                     .expense-summary{
                         background-color: white;
-                        padding: 2rem;
+                        padding: var(--container_padding);
                         color: red;
                         font-weight: bolder;
-                        border-radius: 0.5rem;
+                        border-radius: var(--border-radius);
+                    }
+                    .expense-summary:hover,
+                    .income-summary:hover{
+                        transform: translateY(5px);
                     }
                 }
             }
         }
         .transaction-container{
-            background-color: brown;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            .form-group{
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            font-weight: bold;
+            gap: 2rem;
+            margin: 2rem auto;
+            /* repeat(auto-fit, minmax(200px, 1fr)); */
+
+            .transactions{
+                max-height: 200px;
+                overflow-y: auto;
+                overflow-x:hidden;
+                padding: 0.5rem;
+
+                ul{
+                    text-align: center;
+
+                    li{
+                        display: grid;
+                        grid-template-columns: 3fr 2fr 1fr;
+                        text-align: left;
+                        padding: 0.4rem;
+                        margin: 0.5rem;
+                        
+                    }
+                    li:hover{
+                        transform:translateX(-2px);
+                        
+                    }
+                    li.income{
+                        color:green;
+                        box-shadow: 4px 0px green;
+                        border-radius: 0.4rem;
+                    }
+                    li.expense{
+                        color:red;
+                        box-shadow: 4px 0px red;
+                        border-radius: 0.4rem;
+                    }
+                    .deleteButton{
+                        /* Button to delete Transaction */
+                        border-style:none;
+                        cursor:pointer;
+                        
+                    }
+                    .deleteButton:hover{
+                        background-color: red; 
+                    }
+                }
+            }
+            
+            .add-transactions{       
+                box-shadow: 2px 2px 10px white;
+                border-radius: var(--border-radius);
+                padding: var(--container_padding);
+                
+            }
+            
+            .form{
                 display: flex;
                 flex-direction: column;
+                gap: 10px;
+                
+                .form-group{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    
+                    input{
+                        border-radius: 5px;
+                        border-style: solid;
+                        padding: 5px;
+                    }
+                }
+                
+                button{
+                    width: 100%;
+                    padding: 5px;
+                }
             }
+
              
         }
+
     </style>
 </head>
 <body>
     <div class="main-container">
-        <p>Expense Tracker</p>
+        <p class="bigTitle">Expense Tracker</p>
         <div class="view-container">
             
             <p>Your Balance</p>
-            <p>$1</p>
+            <p class="total" id="total"></p>
             <!-- Placeholder for calculated balance -->
 
             <div class="summary">
                 <div class="income-summary">
                     <p>Income</p>
-                    <p>$6</p>
+                    <p class="total" id="income"></p>
                 </div>
                 <div class="expense-summary">
                     <p>Expenses</p>
-                    <p>-$5</p>
+                    <p class="total" id="expense"></p>
                 </div>
             </div>
 
@@ -94,25 +187,142 @@
         <div class="transaction-container">
             <div class="transactions">
                 <p>Transactions</p>
+                <ul id="transactionList">
+                    <li>
+                        <!-- 
+                        <span>Description </span>
+                        <span>Amount </span>
+                        <span><button>X</button></span> 
+                        -->
+                    </li>
+                </ul>
                 <!-- List of Transactions go here -->
             </div>
             <div class="add-transactions">
                 <!-- Form goes here -->
-                 <form>
+                 <form class="form" id="form">
                     <div class="form-group">
                         <label>Description</label>
-                        <input type="text" placeholder="Enter the description">
+                        <input id="description" type="text" placeholder="Enter the description" >
                     </div>
                     <div class="form-group">
                         <label>Amount</label>
-                        <input type="number" placeholder="Enter the amount">
+                        <input id="amount" type="number" placeholder="Enter the amount" >
                     </div>
                     <button>Add Transaction</button>
                  </form>
             </div>
         </div>
-
     </div>
+
+<script>
+    const form = document.getElementById("form");
+    const descriptionElement = document.getElementById("description");
+    const amountElement = document.getElementById("amount");
+    const transactionList = document.getElementById("transactionList");
+    const total = document.getElementById("total");
+    const incomeElement = document.getElementById("income");
+    const expenseElement = document.getElementById("expense");
+    const deleteButton = document.getElementsByClassName("deleteButton");
+
+    //load saved transactions from storage into transactions array
+    let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+    
+    //Data needs to show in UI under appropriate HTML Tags
+    //Function to cycle throught the array
+    //Form needs to reset
+    function renderTransactions(){
+        transactionList.innerHTML="";
+        transactions.forEach((transaction) => {
+            //goes through all the transactions within transactions
+            //data from storage needs to transform into tags
+            const liElement = createLi(transaction);
+            transactionList.appendChild(liElement);
+            
+            //simultaneously need to update summary
+        });
+    }
+
+    form.addEventListener("submit", (e) => {
+        //Runs whenever the form is posted
+        //Take values from fields
+        e.preventDefault();
+
+        const description = descriptionElement.value.trim();
+        const amount = amountElement.value;
+
+        if(amount){
+            transactions.push({
+                id: Date.now(),
+                description,
+                amount
+            });
+        }
+
+        //Data being pushed is not persistent - Fixed that
+        localStorage.setItem("transactions", JSON.stringify(transactions));
+
+        renderTransactions();
+        updateSummary();
+        form.reset();
+    });
+    
+    function updateSummary(){
+
+        //Reduce the array's contents to the final value and add them up
+        //Display the result in the DOM
+        const balance = transactions.reduce((acc, transaction) => Number(transaction.amount)+acc ,0);
+        total.innerHTML="$"+balance;
+        
+        const income = transactions.filter((transaction) => transaction.amount > 0)
+        .reduce((acc, transaction) => acc+ Number(transaction.amount),0);
+        incomeElement.innerHTML="$"+income;
+
+        const expense = -transactions.filter((transaction) => transaction.amount < 0)
+        .reduce((acc,transaction) => acc+ Number(transaction.amount),0);
+        expenseElement.innerHTML="-$"+expense;
+    }
+
+
+    function createLi(transaction){
+        //create List tags
+        const li = document.createElement("li");
+
+        //Add class for coloring
+        li.classList.add(transaction.amount > 0 ? "income":"expense");
+
+        li.innerHTML=`
+            <span>${transaction.description}</span>
+            <span>${transaction.amount}</span>
+            <button class="deleteButton" onClick="deleteTransaction(${transaction.id})">X</button>
+        `;
+        // console.log(transaction.id);
+        return li;
+    }
+
+    function deleteTransaction(id){
+        // to be removed
+        console.log(id) 
+
+        // before removing
+        console.log(transactions);
+
+        transactions = transactions.filter((transaction) => transaction.id !== id);
+        // after removing
+        console.log(transactions);
+
+        localStorage.setItem("transactions", JSON.stringify(transactions));
+        renderTransactions();
+        updateSummary();
+    }
+        renderTransactions();
+        updateSummary();
+// To Do
+// Hover Transition
+// Delete button
+
+
+</script>
 
 </body>
 </html>
