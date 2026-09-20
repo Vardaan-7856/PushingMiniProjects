@@ -272,15 +272,15 @@
         //Reduce the array's contents to the final value and add them up
         //Display the result in the DOM
         const balance = transactions.reduce((acc, transaction) => Number(transaction.amount)+acc ,0);
-        total.innerHTML="$"+balance;
+        total.innerHTML="₹"+balance;
         
         const income = transactions.filter((transaction) => transaction.amount > 0)
         .reduce((acc, transaction) => acc+ Number(transaction.amount),0);
-        incomeElement.innerHTML="$"+income;
+        incomeElement.innerHTML="₹"+income;
 
         const expense = -transactions.filter((transaction) => transaction.amount < 0)
         .reduce((acc,transaction) => acc+ Number(transaction.amount),0);
-        expenseElement.innerHTML="-$"+expense;
+        expenseElement.innerHTML="-₹"+expense;
     }
 
 
@@ -292,9 +292,9 @@
         li.classList.add(transaction.amount > 0 ? "income":"expense");
 
         li.innerHTML=`
-            <span>${transaction.description}</span>
-            <span>${transaction.amount}</span>
-            <button class="deleteButton" onClick="deleteTransaction(${transaction.id})">X</button>
+            <span>₹{transaction.description}</span>
+            <span>₹{transaction.amount}</span>
+            <button class="deleteButton" onClick="deleteTransaction(₹{transaction.id})">X</button>
         `;
         // console.log(transaction.id);
         return li;

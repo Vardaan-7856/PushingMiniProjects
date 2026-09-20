@@ -105,11 +105,15 @@
         let randomIndex = 0;
         let colorArray = [];
         // Events
-        genButton.addEventListener("click", () => {
+        genButton.addEventListener("click", (e) => {
             //Clear the working area aka color-box
             // colorBox.innerHTML = button
+            e.preventDefault();
 
+            //Fix: Persistent colors
+                colorArray.length = 0;
 
+            
             //put the generated hex pattern in the array
             for(let j = 0; j < 5; j++)
             {
@@ -138,7 +142,8 @@
             });
         });
 
-        colorBox.addEventListener("click", () => {
+        colorBox.addEventListener("click", (e) => {
+            e.preventDefault();
 
             //stores the button ID of the button clicked
             let buttonID = event.target.id;
@@ -160,6 +165,8 @@
                 console.error("Copy failed:", err);
             });
         });
+        
+
 
     </script>
 </body>

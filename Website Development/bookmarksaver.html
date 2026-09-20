@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmark Saver</title>
+    <style>
+        *{
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        body{
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container{
+            height: 500px;
+            width: 400px;
+            background-color: rgba(128, 128, 128, 0.44);
+            border-radius: 0.3rem;
+            overflow-y: auto;
+        }
+
+        .form_container{
+            
+
+            .title{
+                text-align: center;
+                font-weight: bold;
+                font-size: 2rem;
+                margin: 1rem auto;
+                color: rgb(24, 173, 24);
+            }
+
+            .form{
+                display: grid;
+                grid-template-rows: 1fr 1fr;
+                margin: 0px 2rem;
+                gap: 0.3rem;
+            }
+
+            input{
+                padding: 0.2rem;
+            }
+
+            button{
+                padding: 0.3rem;
+                background-color: rgb(24, 173, 24);
+                border-style: none;
+                color: white;
+                cursor: pointer;
+                font-weight: 500;
+
+            }
+            button:hover{
+                background-color: rgb(21, 150, 21);
+            }
+        }
+
+        .bookmark_container{
+            margin: 1rem 2rem;
+            list-style-type: none;
+
+            .bookmark{
+                display: grid;
+                grid-template-columns: 3fr 1fr;
+                margin: 0.4rem auto;
+                border:solid 1px;
+                padding: 0.4rem;
+                border-color: grey;
+            }
+
+            button{
+                background-color: red;
+                border-style: none;
+                color: white;
+                font-weight: 500;
+                cursor: pointer;
+            }
+            button:hover{
+                background-color: rgb(124, 0, 0);
+            }
+            button:active{
+                background-color: rgba(124, 0, 0, 0.5);
+            }
+        }
+        .grey{
+        background-color: grey;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="form_container">
+            <p class="title">Bookmark saver</p>
+            <form class="form">
+                <input placeholder="Bookmark Name" id="bookmarkName" type="text" required>
+                <input placeholder="Bookmark URL" id="bookmarkURL" type="url" required> 
+                <button id="addButton">Add Bookmark</button>
+            </form>
+        </div>
+
+        <ul class="bookmark_container" id="bookmark">
+            <li class="bookmark">
+                <a href="https://instagram.com">Instagram</a>
+                <button onclick="deleteBookmark()">Delete</button>
+            </li>
+            
+        </ul>
+
+    </div>
+    <script>
+        //Persistent memory
+        //Acquire Bookmark data
+        //To Do: 
+        const bookmarkParent = document.getElementById("bookmark");
+        const bookmarkName = document.getElementById("bookmarkName");
+        const bookmarkURL = document.getElementById("bookmarkURL");
+        const addButton = document.getElementById("addButton");
+
+        let bookmarkArray = [];
+        loadBookmarks();
+
+        addButton.onclick = (e) => {
+            e.preventDefault();
+
+            let bookmarkNameValue = bookmarkName.value;
+            let bookmarkURLValue = bookmarkURL.value;
+
+            //Check for empty form submission
+            if(bookmarkNameValue === '' || bookmarkURLValue === ''){
+                alert("Please enter the required values.")
+                return;
+            }
+
+            bookmarkArray.push({
+                bookmarkNameValue: bookmarkNameValue,
+                bookmarkURLValue: bookmarkURLValue
+            });
+            
+            localStorage.setItem("bookmarkArray", JSON.stringify(bookmarkArray));
+
+            loadBookmarks();
+
+            bookmarkName.value = "";
+            bookmarkURL.value = "";
+        };
+        
+        //Add Bookmark to DOM
+        function loadBookmarks() {
+
+            //Load Bookmarks from memory
+            const savedBookmarks = JSON.parse(localStorage.getItem("bookmarkArray")) || [];
+            bookmarkParent.innerHTML = "";
+
+            savedBookmarks.forEach((bookmark, index) => {
+                const li = document.createElement("li");
+    
+                li.innerHTML=`
+                    <a href="${bookmark.bookmarkURLValue}">${bookmark.bookmarkNameValue}</a>
+                    <button id="${index}">Delete</button>
+                `;
+
+                li.classList.add("bookmark");    
+                bookmarkParent.appendChild(li);
+            });
+        }
+
+        //Remove Bookmark
+        bookmarkParent.addEventListener("click", (e) => {
+            const savedBookmarks = JSON.parse(localStorage.getItem("bookmarkArray")) || [];
+            const parentBookmark = e.target.closest('li');
+            parentBookmark.classList.add("grey");
+
+            console.log(parentBookmark);
+            savedBookmarks.splice(e.target.id, 1);
+            localStorage.setItem("bookmarkArray", JSON.stringify(savedBookmarks));
+
+            setTimeout(() => {
+                
+                loadBookmarks();
+            }, 700);
+        });
+        
+        //Additional: 
+    </script>
+</body>
+</html>
