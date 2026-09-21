@@ -176,16 +176,21 @@
         bookmarkParent.addEventListener("click", (e) => {
             const savedBookmarks = JSON.parse(localStorage.getItem("bookmarkArray")) || [];
             const parentBookmark = e.target.closest('li');
-            parentBookmark.classList.add("grey");
 
-            console.log(parentBookmark);
-            savedBookmarks.splice(e.target.id, 1);
-            localStorage.setItem("bookmarkArray", JSON.stringify(savedBookmarks));
+            if(e.target.tagName === "BUTTON"){
 
-            setTimeout(() => {
-                
-                loadBookmarks();
-            }, 700);
+                parentBookmark.classList.add("grey");
+    
+                const indexToDelete = Number(e.target.id);
+                savedBookmarks.splice(indexToDelete, 1);
+                bookmarkArray = savedBookmarks;
+                localStorage.setItem("bookmarkArray", JSON.stringify(savedBookmarks));
+    
+                setTimeout(() => {
+                    
+                    loadBookmarks();
+                }, 700);
+            }
         });
         
         //Additional: 
