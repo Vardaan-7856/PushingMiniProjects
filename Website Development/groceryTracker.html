@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Tracker</title>
+    <style>
+        *{
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+        body{
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(0, 84, 0, 0.926), rgb(0, 59, 0));
+
+            p{
+                font-size: 1.5rem;
+                margin: 3rem auto;
+            }
+
+            .form{
+                display: flex;
+                flex-direction: column;
+                gap:0.2rem;
+                min-width: 90vw;
+                margin: 10px auto;
+
+                input,
+                select,
+                button{
+                    font-size: 1rem;
+                    text-align: center;
+                }
+            }
+
+        }
+        .container{
+            margin: 0.5rem auto;
+            background-color: rgba(128, 128, 128, 0.462);
+            min-width: 90vw;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            .title{
+                color: white;
+                font-style: oblique;
+            }
+            .herbs{
+                background-color: rgba(26, 255, 0, 0.348);
+                
+            }
+            .immediate{
+                background-color: rgba(164, 1, 1, 0.826);
+                
+            }
+            .priority{
+                background-color: rgba(202, 202, 0, 0.767);
+            }
+            .long{
+                background-color: rgba(0, 0, 0, 0.399);
+                opacity: 1;
+            }
+            .itemContainer{
+                min-height: 150px;
+                padding: 0.5rem;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.361);
+
+                p{
+                    font-weight: bold;
+                    font-size: 1.4rem;
+                    margin: 0.5rem auto;
+                }
+
+                .listItems{
+                    list-style:none;
+                    text-align: center;
+                    font-size: 1.4rem;
+                    width: 50%;
+                    margin: auto;
+
+                    li{
+                        padding: 10px;
+                        color: white;
+                    }
+                    li::selection{
+                        text-decoration: line-through;
+                    }
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <p>Track pantry with ease</p>
+    <form class="form" id="form">
+        <input type="text" placeholder="Enter commodity eg: tomato" id="commodityEntered">
+        <select name="grocerie" id="selectedValue" required>
+    
+            <option value="" disabled selected>Select category</option>
+            <option value="herbs">Herbs - 1day</option>
+            <option value="immediate">Immediate - Less than 3days</option>
+            <option value="priority">Priority - Less than a week</option>
+            <option value="long">Long Term - More than a week</option>
+    
+        </select>
+        <button type="submit" id="enterButton">Enter</button>
+    </form>
+
+    <div class="container" id="container">
+        <div class="herbs itemContainer">
+            <p class="title">Herbs</p>
+            <ul class="listItems" id="herbsParent">
+
+            </ul>
+        </div>
+        <div class="immediate itemContainer">
+            <p class="title">Consume Immediately</p>
+            <ul class="listItems" id="immediateParent">
+    
+            </ul>
+        </div>
+        <div class="priority itemContainer">
+            <p class="title">Consume within 5days</p>
+            <ul class="listItems" id="priorityParent">
+                
+            </ul>
+        </div> 
+        <div class="long itemContainer">
+            <p class="title">Consume within 1month</p>
+            <ul class="listItems" id="longParent">
+                
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Add items to relevant list
+        // Delete item from relevant list
+        const enterButton = document.getElementById("enterButton");
+        const herbsParent = document.getElementById("herbsParent");
+        const immediateParent = document.getElementById("immediateParent");
+        const priorityParent = document.getElementById("priorityParent");
+        const longParent = document.getElementById("longParent");
+        const container = document.getElementById("container");
+
+
+        const form = document.getElementById("form");
+        let herbs = [], immediate = [], priority = [] , long = [];
+        updateUI();
+
+        enterButton.addEventListener("click", (e) => {
+            const commodityEntered = document.getElementById("commodityEntered").value;
+            const selectedValue = document.getElementById("selectedValue").value;
+
+            e.preventDefault();
+
+            if(commodityEntered !== "")
+            {
+                //Find the list and append the value to that list
+                switch (selectedValue) {
+                    case "herbs": 
+                        console.log("Herbs was clicked.");
+                        herbs.push(commodityEntered);
+                        localStorage.setItem("herbsLS", JSON.stringify(herbs));
+                        break;
+
+                    case "immediate": 
+                        console.log("Immediate was clicked.");
+                        immediate.push(commodityEntered);
+                        localStorage.setItem("immediateLS", JSON.stringify(immediate));
+                        break;
+
+                    case "priority": 
+                        console.log("Priority was clicked.");
+                        priority.push(commodityEntered);
+                        localStorage.setItem("priorityLS", JSON.stringify(priority));
+                        break;
+
+                    case "long": 
+                        console.log("Long Term was clicked.");
+                        long.push(commodityEntered);
+                        localStorage.setItem("longLS", JSON.stringify(long));
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            updateUI();
+            //Add: Putting UI Elements into place after button press
+            
+            //End: Reset Form
+            form.reset();
+        });
+        
+        function updateUI(){
+            //set items where they are required
+            resetUI();
+            loadHerbs();
+            loadImmediate();
+            loadPriority();
+            loadLong();
+
+        }
+
+        function loadHerbs() {
+            herbs = JSON.parse(localStorage.getItem("herbsLS")) || [];
+            for (const [index, item] of herbs.entries()){
+                herbsParent.appendChild(createLi(index, item, "herbs"));
+            }
+        }
+
+        function loadImmediate(){
+            immediate = JSON.parse(localStorage.getItem("immediateLS")) || [];
+            for (const [index, item] of immediate.entries()){
+                immediateParent.appendChild(createLi(index, item, "immediate"));
+            }
+        }
+
+        function loadPriority(){
+            priority = JSON.parse(localStorage.getItem("priorityLS")) || [];
+            for (const [index, item] of priority.entries()){
+                priorityParent.appendChild(createLi(index, item, "priority"));
+            }
+        }
+
+        function loadLong(){
+            long = JSON.parse(localStorage.getItem("longLS")) || [];
+            for (const [index, item] of long.entries()){
+                longParent.appendChild(createLi(index, item, "long"));
+            }
+        }
+
+        function createLi(index, item, category){
+            const liElement = document.createElement('li');
+            liElement.id = `${category}-${index}`;
+            liElement.textContent = item;
+            return liElement;
+        }
+
+        function resetUI(){
+            herbsParent.innerHTML = "";
+            immediateParent.innerHTML = "";
+            priorityParent.innerHTML = "";
+            longParent.innerHTML = "";
+        }
+
+        container.addEventListener("dblclick", (e) => {
+            //delete an item from array and set it back into storage
+            //first we need to breakdown the ID that we get
+            //target should be a li element
+            console.log(e.target.tagName);
+            const tagName = e.target.tagName;
+            if(tagName === "LI")
+            {
+                const rawId = e.target.id;
+                const category = rawId.split("-")[0];
+                const index = rawId.split("-")[1];
+                console.log(category,index);
+
+                switch (category)
+                {
+                    case "herbs": 
+                        herbs = JSON.parse(localStorage.getItem("herbsLS")) || [];
+                        herbs.splice(index, 1);
+                        localStorage.setItem("herbsLS", JSON.stringify(herbs));
+                        break;
+                        
+                        
+                        case "immediate": 
+                        immediate = JSON.parse(localStorage.getItem("immediateLS")) || [];
+                        immediate.splice(index,1);
+                        localStorage.setItem("immediateLS", JSON.stringify(immediate));
+                        break;
+                        
+                        case "priority": 
+                        priority = JSON.parse(localStorage.getItem("priorityLS")) || [];
+                        priority.splice(index,1);
+                        localStorage.setItem("priorityLS", JSON.stringify(priority));
+                        break;
+                        
+                        case "long": 
+                        long = JSON.parse(localStorage.getItem("longLS")) || [];
+                        long.splice(index,1)
+                        localStorage.setItem("longLS", JSON.stringify(long));
+                        break;
+                        
+                        default: console.log("An error was discovered!"); 
+                        break;
+                    }
+                    
+                    setTimeout(() => {                        
+                        updateUI();
+                    }, 500);
+            }
+        });
+        
+    </script>
+</body>
+</html>
